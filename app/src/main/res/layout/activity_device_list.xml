@@ -20,7 +20,7 @@
                 android:layout_height="wrap_content"
                 android:background="#666"
                 android:paddingLeft="5dp"
-                android:text="已配对过的设备，可配对设备"
+                android:text="已配对的设备"
                 android:textColor="#ccc"
                 android:visibility="gone" />
 
@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:background="#666"
                 android:paddingLeft="5dp"
-                android:text="新扫描到的设备"
+                android:text="可用设备"
                 android:textColor="#ccc"
                 android:visibility="gone" />
 

@@ -256,12 +256,12 @@ public class MainActivity extends Activity {
 //                    mConversationArrayAdapter.add("Me:  " + writeMessage);
                     Toast.makeText(getApplicationContext(), writeMessage, Toast.LENGTH_SHORT).show();
                     break;
-                case MESSAGE_READ://接收另一设备发送数据
+                case MESSAGE_READ://接收另一设备发送的数据
                     byte[] readBuf = (byte[]) msg.obj;
                     String readMessage = new String(readBuf, 0, msg.arg1);
                     Toast.makeText(getApplicationContext(), readMessage, Toast.LENGTH_SHORT).show();
                     break;
-                case MESSAGE_TOAST://连接失败
+                case MESSAGE_TOAST://连接失败/断开
                     Toast.makeText(getApplicationContext(), msg.getData().getString(TOAST), Toast.LENGTH_SHORT).show();
                     break;
             }
@@ -306,6 +306,7 @@ public class MainActivity extends Activity {
         }
 
     }
+
     @Override
     public synchronized void onResume() {
         super.onResume();
@@ -365,7 +366,7 @@ public class MainActivity extends Activity {
      */
     private void sendMessage(String message) {
         if (mChatService.getState() != BluetoothChatService.STATE_CONNECTED) {
-            Toast.makeText(this, "不能连接这个设备", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "未连接任何设备", Toast.LENGTH_SHORT).show();
             return;
         }
         //写入数据
@@ -382,8 +383,10 @@ public class MainActivity extends Activity {
         }
         BNRemoteVistor.getInstance().unInit();
         super.onDestroy();
-        if (mChatService != null)
+        if (mChatService != null) {
             mChatService.stop();
+//            mChatService=null;
+        }
     }
 
     /**
@@ -564,6 +567,7 @@ public class MainActivity extends Activity {
         }
 
         /////////////////////////////////////////////////
+        String turnName;
 
         /**
          * 导航机动点信息指的是根据用户当前GPS定位点生成的引导用户到下一驾驶操作点的信息
@@ -576,7 +580,7 @@ public class MainActivity extends Activity {
             final String afterMeterS = getFormatAfterMeters(arg0.getManeuverDistance());
             final String nextRoadName = arg0.getNextRoadName();
             final boolean isAlong = arg0.mIsStraight;
-            String turnName = arg0.name;
+            turnName = arg0.name;
             int turnIconResId = SimpleGuideModle.gTurnIconID[0];
 
             if (turnName != null && !"".equalsIgnoreCase(turnName)) {
@@ -595,7 +599,7 @@ public class MainActivity extends Activity {
                 public void run() {
                     mAfterMetersInfoTV.setText(afterMeterS);
                     mGoWhereInfoTV.setText(nextRoadName);
-                    sendMessage(nextRoadName);
+                    sendMessage(afterMeterS + turnName + "进入" + nextRoadName);
                     mNaviAfterView.setVisibility(View.VISIBLE);
                     mAlongRoadView.setVisibility(View.GONE);
                     mTurnIcon.setImageDrawable(getResources().getDrawable(turnIcon));
