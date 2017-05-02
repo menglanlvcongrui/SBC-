@@ -52,13 +52,13 @@ public class BluetoothChatService {
             try {
                 tmp = mAdapter.listenUsingRfcommWithServiceRecord(NAME, MY_UUID);
             } catch (IOException e) {
-                Log.e(TAG, "listen() failed", e);
+                Log.i(TAG, "listen() failed", e);
             }
             mmServerSocket = tmp;
         }
 
         public void run() {
-            Log.d(TAG, "BEGIN mAcceptThread" + this);
+//            Log.i(TAG, "BEGIN mAcceptThread" + this);
             setName("AcceptThread");
             BluetoothSocket socket = null;
 
@@ -66,7 +66,7 @@ public class BluetoothChatService {
                 try {
                     socket = mmServerSocket.accept();
                 } catch (IOException e) {
-                    Log.e(TAG, "accept() failed", e);
+                    Log.i(TAG, "accept() failed", e);
                     break;
                 }
 
@@ -159,8 +159,7 @@ public class BluetoothChatService {
     }
 
     public synchronized void start() {
-//            Log.d(TAG, "start");
-
+        Log.i(TAG, "start");
         if (mConnectThread != null) {
             mConnectThread.cancel();
             mConnectThread = null;
@@ -174,6 +173,7 @@ public class BluetoothChatService {
         if (mAcceptThread == null) {
             mAcceptThread = new AcceptThread();
             mAcceptThread.start();
+            Log.i(TAG, "start Thread");
         }
         setState(STATE_LISTEN);
     }
@@ -195,7 +195,7 @@ public class BluetoothChatService {
         }
 
         public void run() {
-            Log.i(TAG, "BEGIN mConnectThread");
+//            Log.i(TAG, "BEGIN mConnectThread");
             setName("ConnectThread");
 
             mAdapter.cancelDiscovery();
@@ -208,7 +208,7 @@ public class BluetoothChatService {
                 try {
                     mmSocket.close();
                 } catch (IOException e2) {
-                    Log.e(TAG, "unable to close() socket during connection failure", e2);
+                    Log.i(TAG, "unable to close() socket during connection failure", e2);
                 }
                 BluetoothChatService.this.start();
                 return;
@@ -284,7 +284,7 @@ public class BluetoothChatService {
         public void run() {
             byte[] buffer = new byte[1024];
             int bytes;
-//不断监视InputStream，一旦蓝牙客户端Socket发过来信息，就立即接收到
+            //不断监视InputStream，一旦蓝牙客户端Socket发过来信息，就立即接收到
             while (true) {
                 try {
                     //读取客户端发过来的信息，如果未发送任何信息，则该语句被堵塞
@@ -292,7 +292,7 @@ public class BluetoothChatService {
                     //更新页面信息
                     mHandler.obtainMessage(MainActivity.MESSAGE_READ, bytes, -1, buffer).sendToTarget();
                 } catch (IOException e) {
-//                    Log.e(TAG, "disconnected", e);
+                    //Log.e(TAG, "disconnected", e);
                     connectionLost();
                     break;
                 }

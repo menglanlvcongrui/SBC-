@@ -51,7 +51,9 @@
             android:id="@+id/button_scan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="扫描蓝牙设备"
             android:layout_alignParentBottom="true"
-            android:text="扫描蓝牙设备" />
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
     </RelativeLayout>
 </LinearLayout>
